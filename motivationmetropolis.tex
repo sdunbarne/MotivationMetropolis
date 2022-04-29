@@ -1,0 +1,906 @@
+%%% -*-LaTeX-*-
+%%% motivationmetropolis.tex.orig
+%%% Prettyprinted by texpretty lex version 0.02 [21-May-2001]
+%%% on Fri Apr 29 05:44:33 2022
+%%% for Steve Dunbar (sdunbar@family-desktop)
+
+\documentclass[12pt]{article}
+
+\input{../../../../etc/macros} %% \input{../../../../etc/mzlatex_macros}
+\input{../../../../etc/pdf_macros}
+
+\bibliographystyle{plain}
+
+\begin{document}
+
+\myheader \mytitle
+
+\hr
+
+\sectiontitle{Motivational Examples for the Metropolis Algorithm}
+
+\hr
+
+\usefirefox
+
+\hr
+
+% \visual{Study Tip}{../../../../CommonInformation/Lessons/studytip.png}
+% \section*{Study Tip}
+
+% \hr
+
+\visual{Rating}{../../../../CommonInformation/Lessons/rating.png}
+\section*{Rating} %one of
+% Everyone: contains no mathematics.
+% Student: contains scenes of mild algebra or calculus that may require guidance.
+% Mathematically Mature: may contain mathematics beyond calculus with proofs.
+Mathematicians Only:  prolonged scenes of intense rigor.
+
+\hr
+
+\visual{Section Starter Question}{../../../../CommonInformation/Lessons/question_mark.png}
+\section*{Section Starter Question}
+\begin{enumerate}
+    \item
+        What is the ``cycle and transposition'' notation for elements of
+        the group of permutations on \( n \) elements?
+    \item
+        Explain an algorithm for selecting a random permutation from the
+        group of permutations on \( n \) elements.
+\end{enumerate}
+
+\hr
+
+\visual{Key Concepts}{../../../../CommonInformation/Lessons/keyconcepts.png}
+\section*{Key Concepts}
+
+\begin{enumerate}
+    \item
+        Let \( X = S_n \), the \defn{symmetric group} of \( n \)
+        letters, that is, the set of permutations on \( n \) letters
+        with the Cayley distance as metric.  The metric defines a
+        probability distribution on \( S_n \) by
+        \[
+            \pi(\sigma) = z^{-1}\theta^{d(\sigma,\sigma_0)}, \sigma,
+            \sigma_0 \in S_n, 0 \le \theta \le 1.
+        \] Choose a transposition \( (i,j) \) uniformly at random and
+        consider \( (i,j)\sigma = \sigma^{*} \).  Using the Metropolis
+        algorithm with this transposition defines a Markov chain on the
+        symmetric group.  A theorem from Diaconis
+        \cite{diaconis98, diaconis81} shows that starting from the
+        identity and using the identity as \( \sigma_0 \), on the order
+        of \( n \log n \) steps are necessary and sufficient to make the
+        distance to the stationary distribution \( \pi \) small.
+    \item
+        A state of the particles in statistical mechanics is described
+        by a \defn{configuration} \( \omega \) from the \defn{configuration
+        space} \( \Omega \).  The physics of a configuration space \(
+        \Omega \) is described by an energy function \( E:  \Omega \to
+        \Reals^+ \).  A basic principle of statistical physics is that
+        Nature seeks low-energy configurations.  The total energy of the
+        system is the expected value of the energy function.  Defining a
+        probability transition with the Metropolis algorithm, choose
+        configurations with probability \( \EulerE^{E(\omega)/kT} \) and
+        weight them uniformly to find the expected value.
+    \item
+        As a model, the physicist John Kirkwood posed the problem of
+        whether a gas of hard disks would show a phase transitions.
+        Consider placement of \( n \) discs of radius \( \epsilon \) in
+        the unit square.  This hard disks problems is the original
+        motivation for the Metropolis algorithm defining a Markov chain
+        in the configuration space.
+\end{enumerate}
+
+\hr
+
+\visual{Vocabulary}{../../../../CommonInformation/Lessons/vocabulary.png}
+\section*{Vocabulary}
+\begin{enumerate}
+    \item
+        Let \( X = S_n \), the \defn{symmetric group} of \( n \)
+        letters, that is, the set of permutations on \( n \) letters.
+        Let \( d(\sigma, \sigma_0) \) be a metric on the symmetric group
+        by
+        \[
+            d(\sigma, \sigma_0) = \text{ minimum number of
+            transpositions to bring \( \sigma \) to \( \sigma_0 \) }.
+        \] This metric is called \defn{Cayley's distance}.
+    \item
+        In statistical mechanics, a state of the particles is described
+        by a \defn{configuration} \( x \) from the \defn{configuration
+        space} \( \mathcal{X} \).  The configuration can be infinite or
+        finite, continuous or discrete.
+    \item
+        For \( \Omega \) a bounded subset \( \Lambda \) of the integer
+        lattice in the plane, attach a value \( \pm 1 \) to each site in
+        \( \Lambda \).  This value might indicate the presence of
+        particle there, or it might indicate an orientation (or spin) of
+        a particle at the site.  If \( \card{\Lambda} = N \), then the
+        configuration space \( \Omega \) consists of all \( 2^N \)
+        possible assignments of values to sites in \( \Lambda \).  The
+        physics of a configuration space \( \Omega \) is described by an
+        energy function \( E:  \Omega \to \Reals^+ \).  The energy could
+        show the total influence that neighboring particles exert on
+        each other.  This is the \defn{Ising} model.
+    \item
+        For a system at equilibrium, the relative frequency of a
+        configuration \( \omega \) is given by its \defn{Boltzmann
+        weight}
+        \[
+            \EulerE^{E(\omega)/\mathrm{k}T}
+        \] where \( T \) is the temperature and \( \mathrm{k} \) is Boltzmann's
+        constant.  For any \( \omega \in \Omega \), its Boltzmann
+        probability \(
+        \operatorname{Boltz}
+        (\omega) \) is
+        \[
+            \operatorname{Boltz}
+            (\omega) = \frac{\EulerE^{E(\omega)/\mathrm{k}T}}{z}
+        \] where the denominator
+        \[
+            z = \sum\limits_{\omega \in \Omega} \EulerE^{E(\omega)/\mathrm{k}T}
+        \] is called the \defn{partition function}.
+\end{enumerate}
+
+\hr
+
+\section*{Notation}
+\begin{enumerate}
+    \item
+        \( \mathcal{X} = S_n \) -- the \defn{symmetric group} of \( n \)
+        letters, that is, the group of permutations on \( n \) letters
+    \item
+        \( \sigma, \sigma_0, \tau \) -- elements of symmetric group
+    \item
+        \( d(\sigma, \sigma_0) \) -- a metric on the symmetric group
+    \item
+        \( c(\tau) \) -- number of cycles in permutation \( \tau \)
+    \item
+        \( p(\sigma) \) -- probability distribution on \( S_n \)
+    \item
+        \( z \) -- normalizing constant for the probability
+        distribution,
+    \item
+        \( \theta \) -- factor defining the probability distribution
+    \item
+        \( x \) -- \defn{configuration} from the state space, called a
+        \defn{configuration space} \( \mathcal{X} \) in statistical
+        mechanics.
+    \item
+        \( \Lambda \) -- the integer lattice in the plane
+    \item
+        \( E:  \mathcal{X} \to \Reals^+ \) -- energy function
+    \item
+        \( T \) -- temperature and \( \mathrm{k} \) is Boltzmann's
+        constant.
+    \item
+        \( \langle E\rangle \) -- expected value of the energy function
+    \item
+        \( M \) -- number of samples for expected energy approximation
+    \item
+        \( \epsilon \) -- radius of small disc
+    \item
+        \( \mathcal{X} \subset \Reals^d \) -- a bounded connected open
+        set
+    \item
+        \( \tilde{p}(x) > 0 \) -- unnomralized distribution function
+    \item
+        \( z \) -- normalization factor for \( \tilde{p}(x) \)
+    \item
+        \( \delta_x \) -- Dirac delta function
+\end{enumerate}
+
+\visual{Mathematical Ideas}{../../../../CommonInformation/Lessons/mathematicalideas.png}
+\section*{Mathematical Ideas}
+
+The purpose of this section is to provide motivational examples of the
+Metropolis algorithm for creating Markov chains which converge to a
+given distribution.  These examples are from group theory, and
+statistical mechanics.  These examples range from simple to
+sophisticated Markov chains.
+
+\subsection*{Symmetric Function Theory}
+
+Let \( \mathcal{X} = S_n \), the \defn{symmetric group} of \( n \)
+letters, that is, the group of permutations on \( n \) letters.%
+\index{symmetric group}
+Let \( d(\sigma, \sigma_0) \) be a metric on the symmetric group by
+\begin{align*}
+    &d(\sigma, \sigma_0) = \text{ minimum number of transpositions
+    to bring \( \sigma \) to \( \sigma_{0} \)} \\
+    &\quad = \text{ minimum number of transpositions in a representation
+    of \( \sigma_{0} \sigma^{-1} \)}.
+\end{align*}
+This metric is called \defn{Cayley's distance}%
+\index{Cayley distance}
+because a result of A. Cayley implies that \( d(\sigma, \sigma_0) = n -
+c(\sigma^{-1} \sigma_0) \) where \( c(\tau) \) is the number of cycles
+in \( \tau \in S_n \).  This metric is bi-invariant:  \( d(\sigma,
+\sigma_0) = d(\tau \sigma, \tau \sigma_0) = d(\sigma \tau, \sigma_0 \tau)
+\).
+
+%% https://en.wikipedia.org/wiki/Symmetric_group
+%% https://groupprops.subwiki.org/wiki/Element_structure_of_symmetric_group:S4
+
+\begin{example}
+    In \( S_6 \), let \( \sigma_0 = [3,4,5,6,1,2] = (1, 3, 5)(2, 4, 6) \).
+    Consider \( \sigma=[2,6,4,3,1,5] = (1, 2, 6, 5)(3, 4) \).  The
+    permutation that takes \( \sigma \) to \( \sigma_0 \) is \( [1,3,6,5,2,4]
+    = (1)(2, 3, 6, 4, 5) \).  Writing
+    \[
+      (2, 3, 6, 4, 5) = (2, 3)(3, 6)(6,4)(4, 5) = (2, 5)(2, 4)(2, 6)(2, 3),
+    \] the minimum number of
+    transpositions that brings \( \sigma \) to \( \sigma_0 \) is \( 4 \)
+    so \( d(\sigma, \sigma_0) = 4 \).  Furthermore, \( \sigma^{-1} = [5,1,4,3,6,2]
+    \) so (remembering that permutations are functions composed right to
+    left) \( \sigma^{-1} \sigma_0 = [4,3,6,2,5,1] = (1, 4, 2, 3, 6)(5) \)
+    with \( 2 \) cycles.  This is an example of Cayley's theorem that \(
+    d(\sigma, \sigma_0) = n - c(\sigma^{-1} \sigma_0) = 6-2 = 4 \).
+\end{example}
+
+\begin{example}
+    As another larger example, consider \( S_{11} \) with
+    \[
+        \sigma_0 = [4,2,9,10,6,5,11,7,8,1,3] = (1,4,10)(3,9,8,7,11)(5,6).
+    \] Take \( \sigma = [7,4,5,3,1,2,11,9,8,6,10] \).  The permutation
+    that takes \( \sigma \) to \( \sigma_0 \) is
+    \begin{align*}
+      [6,5,10,2,9,1,4,8,7,3,11] &= (1,6)(2,5,9,7,4) (3,10)(8)(11)\\
+                                &= (1,6)(2,5)(5,9)(9,7)(7,4)(3,10).
+    \end{align*}
+    The minimum number of transpositions that brings \( \sigma \) to \(
+    \sigma_0 \) is \( 6 \) so \( d(\sigma, \sigma_0) = 6 \).
+    Furthermore,
+    \[
+        \sigma^{-1} = [5,6,4,2,3,10,1,9,8,11,7] = (1,5,3,4,2,6,10,11,7)(9,8)
+    \] so (remembering that permutations are functions composed right to
+    left)
+    \[
+        \sigma^{-1} \sigma_0 = [2,6,8,11,10,3,7,1,9,5,4] = (1,2,6,3,8)(4,11)
+        (5,10)(7)(9)
+    \] with \( 5 \) cycles.  This is an example of Cayley's theorem that
+    \( d(\sigma, \sigma_0) = n - c(\sigma^{-1} \sigma_0) = 11-5 = 6 \).
+\end{example}
+
+\begin{figure}
+    \centering
+\begin{asy}
+    size(5inches);
+
+real myfontsize = 12;
+real mylineskip = 1.2*myfontsize;
+pen mypen = fontsize(myfontsize, mylineskip);
+defaultpen(mypen);
+
+pair z123=(0,0);
+pair z132=(0,1);
+pair z213=( 1,0);
+pair z321=(-1,0);
+pair z312=(-1,1);
+pair z231=( 1,1);
+
+label("[123]", z123); label("$1/z$", z123, 2S); 
+label("[132]", z132); label("$\theta/z$", z132, 2N); 
+label("[213]", z213); label("$\theta/z$", z213, 2S); 
+label("[321]", z321); label("$\theta/z$", z321, 2S); 
+label("[312]", z312); label("$\theta^2/z$", z312, 2N); 
+label("[231]", z231); label("$\theta^2/z$", z231, 2N); 
+
+
+real eps = 0.05;
+draw(Label("$(2,3)$", align=Center,UnFill), (z123+eps*N)--(z132+eps*S));
+draw(Label("$(1,3)$", align=Center,UnFill), (z123+eps*W)--(z321+eps*E));
+draw(Label("$(1,2)$", align=Center,UnFill), (z123+eps*E)--(z213+eps*W));
+draw(Label("$(1,3)$", align=Center,UnFill), (z213+eps*N)--(z231+eps*S));
+draw(Label("$(1,2)$", align=Center,UnFill), (z132+eps*E)--(z231+eps*W));
+draw(Label("$(1,3)$", align=Center,UnFill), (z132+eps*W)--(z312+eps*E));
+draw(Label("$(1,2)$", align=Center,UnFill), (z321+eps*N)--(z312+eps*S));
+\end{asy}
+    \caption{The graph of \( S_3 \) with transpositions indicated on the
+    edges, giving a diagram of the metric space with the metric being
+    the number of edges between any two permutations and the probability
+    distribution above and below each permutation.}%
+    \label{fig:nonstandardexamples:s3}
+\end{figure}
+
+Fix \( \sigma_0 \), usually the identity permutation \( \sigma_0 = \text
+{id} \). Define a probability measure on \( S_n \) by
+\[
+    p(\sigma) = z^{-1}\theta^{d(\sigma,\sigma_0)}, \sigma, \sigma_0 \in
+    S_n, 0 < \theta \le 1.
+\] The normalizing constant is known in this example:
+\[
+    z = \sum\limits_{\sigma} \theta^{d(\sigma,\sigma_0)} = \prod_{\nu=1}^n
+    (1 + (\nu-1)\theta).
+\] If \( \theta = 1 \), then \( p(\sigma) \) is the uniform distribution
+on \( S_n \).  For \( 0 < \theta < 1 \), \( p(\sigma) \) is largest at \(
+\sigma_0 \) and falls off from its maximum as \( \sigma \) moves away
+from \( \sigma_0 \).  This becomes a nonuniform distribution on \( S_n \),
+with the distribution having a peak at \( \sigma_0 \).  An example with
+the small permutation group \( S_3 \) is illustrated in Figure~%
+\ref{fig:nonstandardexamples:s3} with the metric being the number of
+edges between any two permutations.  The normalizing constant is \( z =
+1 + 3 \theta + 2 \theta^2 = (1)(1 + \theta)(1 + 2 \theta) \).
+
+The main problem here is ``How can samples be drawn from this
+distribution \( p \) defined on the symmetric group?'' The answer here
+is to use a Markov chain defined by the Metropolis algorithm, based on
+random transpositions.%
+\index{Metropolis algorithm}
+To be specific, moving from \( \sigma \), choose a transposition \( (i,j)
+\) uniformly at random and consider \( (i,j)\sigma = \sigma^{*} \).  If \(
+d(\sigma^{*}, \sigma_0) \le d(\sigma, \sigma_0) \) the Markov chain
+state moves to \( \sigma^{*} \).  If \( d(\sigma^{*}, \sigma_0) > d(\sigma,
+\sigma_0) \), flip a coin with probability \( \theta \) of coming up
+heads.  If the coin comes up heads, move to \( \sigma^{*} \), otherwise
+stay at \( \sigma \).  The Markov chain transition probabilities are
+\[
+    P(\sigma, \sigma^{*}) =
+    \begin{cases}
+        1/\binom{n}{2} & \sigma^{*} = (i,j)\sigma, d(\sigma^{*}, \sigma_0)
+        \le d(\sigma, \sigma_0) \\
+        \theta/\binom{n}{2} & \sigma^{*} = (i,j)\sigma, d(\sigma^{*},
+        \sigma_0) > d(\sigma, \sigma_0) \\
+        \cdot (1 - \theta/\binom{n}{2}) & \sigma^{*} = \sigma, m = \abs{%
+        \setof{(i,j)}{d((i,j)\sigma, \sigma_0) > d(\sigma, \sigma_0)}}
+        \\
+        0 & \text{ otherwise}
+    \end{cases}
+    .
+\] The Metropolis construction guarantees the stationary distribution \(
+\pi \) of this Markov chain is the distribution \( p \).  Note that this
+discrete state space and discrete time Markov chain is a specific
+example of a random walk on the graph in Figure~%
+\ref{fig:nonstandardexamples:s3}.
+
+When \( n=3 \), \( X = S_3 \) and \( \sigma_0 = \text{id} = [123] \) the
+complete transition probability matrix is (see the exercises)
+\[
+    \bordermatrix{ & [123] & [213] & [321] & [132] & [231] & [312] \cr
+    [123] & 1-\theta & \frac{\theta}{3} & \frac{\theta}{3} & \frac{\theta}
+    {3} & 0 & 0 \cr
+    [213] & \frac{1}{3} & \frac{2}{3}(1-\theta) & 0 & 0 & \frac{\theta}{3}
+    & \frac {\theta}{3} \cr
+    [321] & \frac{1}{3} & 0 & \frac{2}{3}(1-\theta) & 0 & 0 & \frac{\theta}
+    {3} & \frac{\theta}{3} \cr
+    [132] & \frac{1}{3} & 0 & 0 & \frac{2}{3}(1-\theta) & \frac{\theta}{3}
+    & \frac{\theta}{3} \cr
+    [231] & 0 & \frac{1}{3} & \frac{1}{3} & \frac{1}{3} & 0 & 0 \cr
+    [312] & 0 & \frac{1}{3} & \frac{1}{3} & \frac{1}{3} & 0 & 0 \cr
+    }.
+\] The stationary distribution is the left eigenvector proportional to \(
+(1,\theta, \theta, \theta, \theta^2, \theta^2) \), precisely the
+distribution \( p \).  So sampling from the distribution \( p \) can be
+done by running the Markov chain long enough and using the resulting
+distribution of states.  The eigenvalues are \( 1 \), \( \frac{2}{3}(1-\theta),
+-\theta, 0 \) with multiplicities \( 1 \), \( 1 \), \( 3 \) and \( 1 \)
+respectively
+
+A theorem from Diaconis
+\cite{diaconis81, diaconis09, diaconis98}, shows that starting from the
+identity and using the identity as \( \sigma_0 \), on the order of \( n
+\log n \) steps are necessary and sufficient to make the distance to
+stationarity small.  If the chain starts far from the identity, for
+example at an \( n \)-cycle, it can be shown that order \( n^2 \log n \)
+steps suffice.  In the example for \( S_3 \) this means between \( 3 \)
+to \( 10 \) steps.  As a larger example, if \( n = 52 \), the number of
+cards in a standard deck, then \( n \log n \approx 205.464673366 \),
+while \( n^2 \log n \approx 10684.163015 \).  So the running time for
+sampling from the stationary distribution should be from about several
+hundred to several tens of thousands of steps.%
+\index{Metropolis algorithm!convergence}
+
+\subsection*{General Setting from Statistical Mechanics}
+
+The following is a general setting of Markov chains in statistical
+mechanics with some illustrative examples.%
+\index{statistical mechanics}
+A more specific model is described in detail in the next section.
+
+A state of the multiple particles in the statistical mechanical model is
+described by a \defn{configuration} \( x \) from the state space \(
+\mathcal{X} \), called a \defn{configuration space} in statistical
+mechanics.%
+\index{configuration space}
+The configuration space can be infinite or finite, continuous or
+discrete.  For example, with \( N \) interacting particles, each
+particle's position and velocity in three-dimensional space specifies a
+configuration.  In this case, \( \mathcal{X} \) is an infinite,
+continuous subset of \( \Reals^{6N} \).  As another example, \( \mathcal
+{X} \) might be taken as a bounded subset \( \Lambda \) of the integer
+lattice in the plane, attaching a value \( \pm 1 \) to each site in \(
+\Lambda \).  This value might indicate the presence of particle there,
+or it might indicate an orientation (or spin) of a particle at the site.
+If \( \card{\Lambda} = N \), then the configuration space \( \mathcal{X}
+\) consists of all \( 2^N \) possible assignments of values to sites in \(
+\Lambda \).
+
+The physics of a configuration space \( \mathcal{X} \) is described by
+an energy function \( E:  \mathcal{X} \to \Reals^+ \).  The energy of a
+particular configuration is \( E(x) \).  For the continuous example, the
+energy could be the sum of potential energies, or the sum of all kinetic
+energies, or the sum of both.  For the discrete example above, the
+energy could show the total influence that neighboring particles exert
+on each other.  This is the \defn{Ising} model.%
+\index{Ising model}
+Note that the configuration space and the number of states is quite
+large compared with most of the standard examples of Markov chains.
+
+A basic principle of statistical physics is that Nature prefers
+low-energy configurations with high probability.  This principle governs
+the random organization of molecules in a room.  Rarely observed
+configurations, say all the molecules gathering in a corner of the room
+have high energies and hence low probabilities.  In fact, the
+probabilities are so low such configurations are in principle never
+observed.  Common configurations, such as all molecules distributed
+uniformly at all locations throughout the room have low energies and
+hence higher probabilities, high enough that those configurations are
+essentially the only configurations ever observed.
+
+For a system at equilibrium, the relative frequency of a configuration \(
+x \) is given by its \defn{Boltzmann weight}%
+\index{Boltzmann weight }
+\[
+    \EulerE^{E(x)/\mathrm{k}T}
+\] where \( T \) is the temperature and \( \mathrm{k} \) is Boltzmann's
+constant. For any \( x \in \mathcal{X} \), its Boltzmann probability \(
+\operatorname{Boltz}
+(x) \) is
+\[
+    \operatorname{Boltz}
+    (x) = \frac{\EulerE^{E(x)/\mathrm{k}T}}{z}
+\] where the denominator
+\[
+    z = \sum\limits_{x \in \mathcal{X}} \EulerE^{E(x)/\mathrm{k}T}
+\] is called the \defn{partition function}.%
+\index{partition function}
+In any realistic setting, the partition function is analytically and
+computationally intractable.  This intractability accounts for the
+scarcity of analytic, closed-form results in statistical mechanics.
+
+The total energy of the system is the expected value of the energy
+function, defined by
+\[
+    \langle E\rangle = \sum\limits_{x \in \mathcal{X}} E(x)
+    \operatorname{Boltz}
+    (x) = \frac{\sum\limits_{x \in \mathcal{X}} E(x) \EulerE^{E (x)/\mathrm
+    {k}T}}{z}.
+\] Other physical properties are defined similarly.  In each case, there
+is no avoiding the partition function \( z \).
+
+Expressions such as the total energy could be naively approximated by
+using simple sampling.  Generate a sample \( x_1, x_2, \dots x_M \)
+\emph{uniformly} from \( x \) and estimate both the numerator and the
+denominator separately, giving
+\[
+    \langle E\rangle \approx \frac{\sum\limits_{\nu=1}^M E(x_\nu)\EulerE^
+    {E(x_{\nu})/\mathrm{k}T}}{\sum\limits_{\nu=1}^M \EulerE^{E(x_{\nu})/\mathrm
+    {k}T}}.
+\] The limitation of sampling uniformly from the configuration space is
+not practical since a configuration where \( \EulerE^{E(x)/\mathrm{k}T} \)
+is very small gets chosen with high probability; that is a configuration
+with low weight.%
+\index{Metropolis algorithm}
+The key to the Metropolis algorithm is that instead of choosing
+configurations randomly, then weighting them with \( \EulerE^{E(x)/\mathrm
+{k}T} \), instead choose configurations with probability \( \EulerE^{E(x)/\mathrm
+{k}T} \) and weight them uniformly.  In other words, it is better to
+sample from \( \mathcal{X} \) so that \( x \) is selected with
+probability \(
+\operatorname{Boltz}
+(x) \).  If this can be done, then for any such sample \( x_1, x_2,
+\dots x_M \)
+\[
+    \frac{1}{M} \sum\limits_{\nu=1}^M E(x_\nu) \to \langle E \rangle
+\] as \( M \to \infty \) with rate of convergence \( O(M^{-1/2}) \).
+The challenge is to sample from the nonuniform distribution.
+
+\subsection*{Phase Transitions and Hard Disks}
+
+The study of phase transitions in statistical mechanics is a classical
+problem.%
+\index{phase transitions}
+For many substances, like water, experiments produce phase diagrams such
+as that shown in the schematic Figure~%
+\ref{fig:nonstandardexamples:phasetran}.  The general picture has a
+finite length liquid-vapor phase transition line ending in a critical
+point and a triple point of temperature and pressure where all three
+forms of matter coexist.  A solid-liquid phase line extends to infinity.
+This general form of the phase transition diagram seems universal for
+all kinds of matter.  This suggests there must be a general explanation,
+independent of details such as molecular structure. As a model, the
+physicist John G. Kirkwood posed the problem of whether a gas of hard
+spheres would show phase transitions.
+
+\begin{figure}
+    \centering
+\begin{asy}
+      import graph;
+
+      size(5inches);
+
+real myfontsize = 12;
+real mylineskip = 1.2*myfontsize;
+pen mypen = fontsize(myfontsize, mylineskip);
+defaultpen(mypen);
+
+    real f( real x ) { return x; } real g( real x ) { return 2(x-1)+1; }
+    real h( real x ) { return (x-1)^2/5+1; }
+
+    draw(graph(f, 0,1)); draw(graph(f, 1,9/8), dashed);
+
+    draw(graph(g, 1,3/2)); draw(graph(g, 7/8,1), dashed);
+
+    draw(graph(h, 1,2)); draw(graph(h, 3/4,1), dashed);
+
+    draw((1,0)--(1,1), dotted); label("\( T_{\textrm{triple}} \)", (1,0),
+    S);
+
+    draw((2,0)--(2,h(2)), dotted); label("\( T_{\textrm{critical}} \)",
+    (2,0), S);
+
+    xaxis("Temp", 0,3); yaxis("Pressure", 0,3);
+
+    label("Solid", (1/2, 2)); label("Liquid", (3/2, 3/2)); label("Vapor",
+    (3/2, 1/2));
+\end{asy}
+    \caption{Schematic phase transition diagram.}%
+    \label{fig:nonstandardexamples:phasetran}
+\end{figure}
+
+As a simplified two-dimensional hard spheres model consider placement of
+\( n \) discs of radius \( \epsilon \) in the unit square.  The discs
+must be non-overlapping and completely contained in the unit square.
+Typically, \( n \) is large on the order of \( 100 \) to \( 10^{6} \)
+with \( \epsilon \) correspondingly small.  The centers of the discs
+give a configuration point in the configuration space, \( [0,1]^{2n} \).
+Consider the set of configurations \( \mathcal{X}(n,\epsilon) \) for
+fixed \( n \).  One can think of the configuration as something like a
+``foam'' in \( [0,1]^{2n} \).  For fixed \( n \) and \( \epsilon \) very
+small this set is connected, one can move from one point in \( \mathcal{X}
+(n,\epsilon) \) to another point by sliding one or more discs around in
+the square. Some points in \( [0,1]^{2n} \) will be inaccessible because
+the corresponding discs overlap or extend outside the square.  By its
+embedding in \( [0,1]^{2n} \), \( \mathcal{X}(n,\epsilon) \) inherits a
+natural uniform distribution, Lebesgue measure restricted to \( \mathcal
+{X}(n,\epsilon) \).  The problem is to pick points in \( \mathcal{X}(n,\epsilon)
+\) uniformly.  Choosing \( X_1, X_2, \dots X_M \) with uniform
+distribution for function \( f:  \mathcal{X}(n,\epsilon) \to \Reals \)
+gives the approximation
+\[
+    \int\limits_{ \mathcal{X}(n,\epsilon) } f(x)\df{x} \approx \frac {1}
+    {M}\sum\limits_{\nu=1}^M f(X_\nu).
+\]
+
+This hard disks problems is the original motivation for the Metropolis
+algorithm.%
+\index{Metropolis algorithm}
+The following is a version of the Metropolis algorithm for hard discs.
+\begin{enumerate}
+    \item
+        Start with a configuration \( x \in \mathcal{X}(n,\epsilon) \).
+    \item
+        Pick a disc in that configuration at random, that is, with
+        probability \( 1/n \).
+    \item
+        Pick a point at random in a disc of radius \( h \), centered at
+        the chosen disc center.  At random means with Lebesgue measure
+        restricted to the disc of radius \( h \).
+    \item
+        Try to move the chosen disc center to the chosen point, if the
+        resulting configuration is in \( \mathcal{X}(n,\epsilon) \)
+        accept the move; else, stay at \( x \).
+    \item
+        The algorithm continues, randomly moving coordinates.
+\end{enumerate}
+The algorithm provides a discrete time continuous space Markov chain. If
+\( X_1, X_2, \dots X_M \) are successive configurations, then theory and
+simulations show that \( X_M \) becomes uniformly distributed provided \(
+\epsilon \) is small and \( M \) is large.  For large \( M \), the \( X_i
+\) can be used to approximate integrals as above.
+
+This hard disks model has been studied from a number of perspectives.
+Simulations indicate a phase transition when the density of disks is
+about \( 0.71 \).  This empirical value is below the close packing
+density which is \( \frac{\pi \sqrt{3}}{6} \approx 0.9069 \). Below the
+transition density, the disks look random, above the transition density,
+the disks look close to a lattice packing.  The notions of randomness
+and packing are quantified by a variety of functions.  For example,
+\[
+    f(x) = \abs{ \frac{1}{n} \sum\limits_{\nu=1}^n \frac{1}{n_\nu} \sum\limits_\ell
+    \EulerE^{6 \I \theta_{\nu,\ell}}}
+\] where the sum is over the \( n \) particles encoded by \( x \in [0,1]^
+{2n} \), the sum in \( \ell \) is over the \( n_\ell \) neighbors of the
+\( \nu \)th particle and \( \theta_{\nu,\ell} \) is the angle between
+the particles \( \nu \) and \( \ell \) in some fixed reference frame.
+If the configuration has a local hexagonal structure, the sum should be
+small. Different functions can be used to study long-range order.
+
+\subsection*{A Generalization of Hard Disks}
+
+Let \( \mathcal{X} \subset \Reals^d \) be a bounded connected open set.
+Let \( \tilde{p}(x) > 0 \), \( z = \int\limits_{\mathcal{X}} \tilde{p}(x)
+\df{x} < \infty \), \( p(x) = z^{-1} \tilde{p}(x) \) be a probability
+distribution on \( \mathcal{X} \).  As necessary, extend \( p(x) = 0 \)
+outside \( \bar{\mathcal{X}} \).  Sampling problems can be stated as
+\emph{Given \( \tilde{p} \), choose points in \( \mathcal{X} \) from \(
+p \).} Note that the normalizing constant \( z \) may not be given and
+is usually impossible to approximate.  As an example, consider placing
+fifty hard discs of radius \( \epsilon = 1/100 \) randomly in the unit
+square.  The set of allowable configurations is a complex cuspy set.
+While \( \tilde{p} = 1 \) on \( \mathcal{X} \) it is not practical to
+compute \( z \).  Nevertheless, it is still possible to sample from \( p
+\).
+\begin{enumerate}
+    \item
+        For \( x \in \mathcal{X} \), fix a small positive \( h \).
+    \item
+        Choose \( y \in B_x(h) \), from normalized Lebesgue measure on
+        this ball.
+    \item
+        If \( p(y) \ge p(x) \), move to \( y \).
+    \item
+        If \( p(y) < p(x) \), move to \( y \) with probability \( p(y)/p
+        (x) \).
+    \item
+        If \( p(y) < p(x) \), stay at \( x \) with probability \( 1 - p(y)/p
+        (x) \).
+\end{enumerate}
+Note that this algorithm does not require knowing \( z \) because it
+only relies on the ratio \( p(y)/p(x) = \tilde{p}(y)/\tilde{p}(x) \).
+The transition from \( x \) to \( y \) has a transition kernel (not
+matrix, since the state space is continuous)
+\[
+    P(x, \df{y}) = m(x)\delta_x + \frac{h^{-d}}{%
+    \operatorname{Vol}
+    (B_1)} \delta_{B_1}\left( \frac{x-y}{h} \right) \min \left( \frac{p(x)}
+    {p(y)}, 1 \right) \df{y}
+\] where
+\[
+    m(x) = 1 - \int\limits_{\Reals^d} \frac{h^{-d}}{%
+    \operatorname{Vol}
+    (B_1)} \delta_{B_1}\left( \frac{x-y}{h} \right) \min \left( \frac{p(x)}
+    {p(y)}, 1 \right) \df{y}.
+\] This kernel operates on \( L^2(p) \) by
+\[
+    P[f](x) = \int\limits_{\Reals^d} f(y) P(x,\df{x}).
+\] \( P(x,\df{y}) \) is a bounded self-adjoint operator \( L^2(p) \).
+Describe this discrete time continuous space Markov chain as:
+\begin{enumerate}
+    \item
+        Start at \( X_0 = x \in \mathcal{X} \).
+    \item
+        Pick \( X_1 \) from \( P(X_0, \df{y}) \).
+    \item
+        Pick \( X_2 \) from \( P(X_1, \df{y}) \).
+    \item
+        Continue this process.
+\end{enumerate}
+This means that
+\[
+    P(X_2 \in A) = P^2_x(A) = \int\limits_{\Reals^d} P(z,A) P(x,\df{z}),
+\] and more generally
+\[
+    P(X_M \in A) = P^M_x(A) = \int\limits_{\Reals^d} P(z,A) P^{M-1}(x,\df
+    {z}).
+\] Under the assumptions that for \( \mathcal{X} \) connected and \( h \)
+small, then for all \( x \in \mathcal{X} \) and \( A \subset \mathcal{X}
+\), the process converges to the stationary distribution,
+\[
+    P^M_x(A) \to \int\limits_A p(y) \df{y}.
+\] A natural question is to ask how fast this convergence occurs.  How
+many steps should the algorithm be run to achieve an acceptable degree
+of convergence?  The following theorem of Diaconis, Lebeau and Michel
+gives an estimate:
+\begin{theorem}[Diaconis, Lebeau, Michel]
+    Let \( \mathcal{X} \) be a connected Lipshitz domain in \( \Reals^d \).
+    For \( p \) measurable (with \( 0 < m \le p(x) \le M < \infty \) on \(
+    \mathcal{X} \)) and \( h \) fixed and small, the Metropolis
+    algorithm satisfies
+    \[
+        \abs{P^M_x(A) - \int\limits_A p(y) \df{y} } \le c_1 \EulerE^{-c_2
+        M h^2} \text{ uniformly in } x \in \mathcal{X}, A \subset
+        \mathcal{X}.
+    \]
+\end{theorem}
+Here \( c_1 \), \( c_2 \) are positive constants that depend on \(
+\tilde{p} \) and \( \mathcal{X} \) but not on \( x \), \( M \) or \( h \).
+The inequality has a matching lower bound.  Good estimates on \( c_2 \)
+are available.
+
+Note that the Metropolis algorithm in this section is based on steps in
+the full-dimensional ball \( B_{\epsilon(x)} \) while the Metropolis
+algorithm for discs in the previous section is based on changing just
+two coordinates at a time.
+
+\visual{Section Starter Question}{../../../../CommonInformation/Lessons/question_mark.png}
+\section*{Section Ending Answer}
+\begin{enumerate}
+    \item
+        The cycle \( (i_1, i_2, \dots, i_r) \) is the permutation that
+        sends element \( i_1 \) to \( i_2 \), \( i_2 \) to \( i_3 \) and
+        so on, until \( i_r \) is sent to \( i_1 \), leaving all other
+        elements fixed.  A transposition is just a \( 2 \)-cycle \( (i_1,
+        i_2) \) exchanging \( 2 \) elements. Compose cycles by composing
+        the permutations each represents.  A standard result about
+        permutations is that every permutation is the composition of its
+        cycles, and that every permutation is uniquely expressed as the
+        composition of its disjoint cycles. Furthermore, a simple
+        examination shows that the cycle \( (i_1, i_2, \dots, i_r) \)
+        can be written as \( (i_1, i_2 )(i_1, i_3)\dots (i_1,i_r) \) so
+        that every cycle can be written as the product of
+        transpositions.
+    \item
+        A simple algorithm to generate a permutation of \( n \) items
+        uniformly at random without retries, known as the Knuth shuffle
+        or the modern Fisher-Yates algorithm, is to start with any
+        permutation (for example, the identity permutation), and then go
+        down through the positions \( n \) to \( 1 \).  For each
+        position \( i \) swap the element currently there with a
+        randomly chosen element from positions \( 1 \) through \( i \)
+        inclusive.  It follows that this algorithm will produce any
+        permutation of \( n \) elements with probability exactly \( 1/n!
+        \), thus yielding a uniform distribution over all such
+        permutations.
+\end{enumerate}
+
+\subsection*{Sources} This section is adapted from:  The Markov Chain
+Monte Carlo Revolution by Persi Diaconis,
+\cite{diaconis09}.  The Section Ending Answer on random permutations is
+taken from the Wikipedia article \link{https://en.wikipedia.org/wiki/Random_permutation}
+{Random Permutations} % \nocite{}
+% \nocite{}
+
+\hr
+
+\visual{Algorithms, Scripts, Simulations}{../../../../CommonInformation/Lessons/computer.png}
+\section*{Algorithms, Scripts, Simulations}
+
+\subsection*{Algorithm}
+
+\subsection*{Scripts}
+
+% \input{ _scripts}
+
+\hr
+
+\visual{Problems to Work}{../../../../CommonInformation/Lessons/solveproblems.png}
+\section*{Problems to Work for Understanding}
+\renewcommand{\theexerciseseries}{}
+\renewcommand{\theexercise}{\arabic{exercise}}
+
+\begin{exercise}
+    Show that the transition probability matrix for the Metropolis
+    algorithm on the symmetric group \( S_3 \) is
+    \[
+        \bordermatrix{ & [123] & [213] & [321] & [132] & [231] & [312]
+        \cr
+        [123] & 1-\theta & \frac{\theta}{3} & \frac{\theta}{3} & \frac{\theta}
+        {3} & 0 & 0 \cr
+        [213] & \frac{1}{3} & \frac{2}{3}(1-\theta) & 0 & 0 & \frac{\theta}
+        {3} & \frac {\theta}{3} \cr
+        [321] & \frac{1}{3} & 0 & \frac{2}{3}(1-\theta) & 0 & 0 & \frac{\theta}
+        {3} & \frac{\theta}{3} \cr
+        [132] & \frac{1}{3} & 0 & 0 & \frac{2}{3}(1-\theta) & \frac{\theta}
+        {3} & \frac{\theta}{3} \cr
+        [231] & 0 & \frac{1}{3} & \frac{1}{3} & \frac{1}{3} & 0 & 0 \cr
+        [312] & 0 & \frac{1}{3} & \frac{1}{3} & \frac{1}{3} & 0 & 0 \cr
+        }.
+    \]
+\end{exercise}
+\begin{solution}
+    If \( \sigma = [123] \) and the tranposition is \( (1,2) \), then \(
+    \sigma^{*} = (1,2)[123] = [213] \), with \( d(\sigma^{*}, \sigma_0)
+    = 1 \) while \( d(\sigma,\sigma_0) = 0 \).  The second case applies
+    and the transition probability \( P([123], [213]) = \theta/3 \).
+    Similar calculations apply for \( (1,3) \) with \( \sigma^8 = [312] \)
+    and \( (2,3) \) with \( \sigma^* = [132] \).  This is enough
+    information to fill the first row of the transition probability
+    matrix.
+
+    If \( \sigma = [132] \) and the tranposition is \( (1,2) \), then \(
+    \sigma^{*} = (1,2)[132] = [231] \), with \( d(\sigma^{*}, \sigma_0)
+    = 2 \) while \( d(\sigma,\sigma_0) = 1 \).  The second case applies
+    and the transition probability \( P([132], [231]) = \theta/3 \). If \(
+    \sigma = [132] \) and the tranposition is \( (1,3) \), then \(
+    \sigma^{*} = (1,3)[132] = [312] \), with \( d(\sigma^{*}, \sigma_0)
+    = 2 \) while \( d(\sigma,\sigma_0) = 1 \).  The second case applies
+    again and the transition probability \( P([132], [312]) = \theta/3 \).
+
+    If \( \sigma = [132] \) and the tranposition is \( (2,3) \), then \(
+    \sigma^{*} = (2,3)[132] = [123] \), with \( d(\sigma^{*}, \sigma_0)
+    = 0 \) while \( d(\sigma,\sigma_0) = 1 \).  The first case applies
+    again and the transition probability \( P([132], [123]) = 1/3 \).
+    Similar calculations apply for \( (1,3) \) with \( \sigma^8 = [312] \)
+    and \( (2,3) \) with \( \sigma^* = [132] \).  This enough
+    information to complete the fourth row of the transition probability
+    matrix.
+
+    If \( \sigma = [312] \) and the tranposition is \( (1,2) \), then \(
+    \sigma^{*} = (1,2)[312] = [321] \), with \( d(\sigma^{*}, \sigma_0)
+    = 1 \) while \( d(\sigma,\sigma_0) = 2 \).  The first case applies
+    and the transition probability \( P([312], [321]) = 1/3 \).  Similar
+    calculations apply for \( (1,3) \) with \( \sigma^* = [132] \) and \(
+    (2,3) \) with \( \sigma^* = [213] \).
+
+    The other rows are similar
+\end{solution}
+
+\begin{exercise}
+    Choose a value of \( \theta \) (\( 0 < \theta < 1 \)) and run the
+    Markov chain on \( S_3 \) for \( 10 \) iterations.  How far is each
+    row from the stationary distribution?
+\end{exercise}
+\begin{solution}
+    For \( \theta = 1/2 \), \( P^{10} \) is (to three decimal places)
+    \[
+        \begin{pmatrix}
+            0.333&0.167&0.167&0.167&0.083&0.083\\
+            0.333&0.167&0.167&0.167&0.083&0.083\\
+            0.333&0.167&0.167&0.167&0.083&0.083\\
+            0.333&0.167&0.167&0.167&0.083&0.083\\
+            0.334&0.166&0.166&0.166&0.084&0.084\\
+            0.334&0.166&0.166&0.166&0.084&0.084
+        \end{pmatrix}
+    \] agreeing with the stationary distribution.
+\end{solution}
+
+\begin{exercise}
+    Prove that any permutation of n elements will be produced by the
+    Knuth shuffle algorithm with probability exactly \( 1/n! \), thus
+    yielding a uniform distribution over all such permutations.
+
+\end{exercise}
+\begin{solution}
+    The algorithm needs to shuffle an array in a way such that all \( n!
+    \) permutations are equally likely.  One important property of the \(
+    n! \) permutations is that any given position (say \( j \)) will be
+    populated by a given element (say \( i \)) with probability \( 1/n \).
+    This is because, out of the \( n! \) permutations, \( (n-1)! \)
+    contain element \( j \) at location \( i \).  Due to this
+    equidistribution, we can try to first fix the element at a
+    particular (in this case, the last) location and then process the
+    remaining elements.  The first step of the algorithm guarantees the
+    probability of the last entry being \( j \) is \( 1/n \), the second
+    step of the algorithm guarantees the probability of the second-last
+    entry being \( j \) is \( 1/(n-1) \) and so on. Inductively then,
+    the probability of a given permutation is \( 1/n! \).
+\end{solution}
+
+\hr
+
+\visual{Books}{../../../../CommonInformation/Lessons/books.png}
+\section*{Reading Suggestion:}
+
+\bibliography{../../../../CommonInformation/bibliography}
+
+%   \begin{enumerate}
+%     \item
+%     \item
+%     \item
+%   \end{enumerate}
+
+\hr
+
+\visual{Links}{../../../../CommonInformation/Lessons/chainlink.png}
+\section*{Outside Readings and Links:}
+\begin{enumerate}
+    \item
+    \item
+    \item
+    \item
+\end{enumerate}
+
+\hr
+
+\mydisclaim \myfooter
+
+Last modified:  \flastmod
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
